@@ -1,42 +1,45 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
+	"time"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 func checkPortal(url string) {
 	response, err := http.Get(url)
 	if err != nil {
-		fmt.Println("Request unsuccessful.")
+		log.Warn().Msg("Request unsuccessful.")
 		return
 	}
 	defer response.Body.Close()
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("Reading response failed.")
+		log.Warn().Msg("Reading response failed.")
 		return
 	}
 
-	if response.StatusCode == 200 && strings.Contains(string(body), "portal") {
-		fmt.Println("Portal detection succeed.")
-		//connect_network(user)
+	if response.StatusCode >= 300 && response.StatusCode < 400 && strings.Contains(string(body), "portal") {
+		log.Info().Msg("Portal detection succeed.")
 	} else {
-		fmt.Println("Portal detection fail.")
-		fmt.Println("Network is online.")
+		log.Warn().Msg("Portal detection fail.")
+		log.Info().Msg("Network is online.")
 	}
 }
 
-/*
-func connect_network(user User) {
-	//post login request.
-}
-*/
-
 func main() {
+	// set log style, look like: 2006-01-02T15:04:05Z07:00 INFO Msg Str
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339})
+
 	check_url := "https://ping.archlinux.org/nm-check.txt"
+
+	log.Info().Msg("アトリは、高性能ですから!")
+
 	checkPortal(check_url)
 }
