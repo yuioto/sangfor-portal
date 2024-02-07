@@ -1,0 +1,5 @@
+[sangfor-portal]
+url = "https://captive.apple.com/hotspot-detect.html"
+account = "username"	# Change username to your username.
+password = "0"		# Many places use 0 as the default password. 
+			# If not, please change it to yours.

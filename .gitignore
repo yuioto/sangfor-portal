@@ -22,3 +22,9 @@ go.work
 
 # build bin file
 sangfor-portal
+
+# my confil files
+sangfor-portal.toml
+
+# tmp files
+*.bak
